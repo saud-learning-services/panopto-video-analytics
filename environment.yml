@@ -1,0 +1,8 @@
+name: python-soap
+channels:
+  - conda-forge
+dependencies:
+  - python-dotenv
+  - zeep
+  - urllib3
+  - pip
