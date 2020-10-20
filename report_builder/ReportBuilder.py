@@ -23,7 +23,7 @@ class ReportBuilder:
             host, username, password, verify_ssl=True)
         self.usage_client = self.auth.get_client('UsageReporting')
 
-    def get_session_extended_details(self, session_id):
+    def get_viewing_details(self, session_id):
         '''
         Calls the "UsageReporting.GetSessionExtendedDetailedUsage" method
         Gets all records by iterating through all pages
@@ -35,7 +35,7 @@ class ReportBuilder:
         now = datetime.now()
         last_month = now - timedelta(days=30)
 
-        page_size = 25
+        page_size = 150
         page_num = 0
 
         records = []
@@ -55,6 +55,11 @@ class ReportBuilder:
                             'PageNumber': page_num},
                 beginRange=last_month,
                 endRange=now)
+
+            # if the response has no viewing data just skip it
+            # TODO: should there be a CSV even if there are no views?
+            if resp['TotalNumberResponses'] == 0:
+                break
 
             chunk = resp['PagedResponses']['ExtendedDetailedUsageResponseItem']
 

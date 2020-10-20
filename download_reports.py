@@ -1,5 +1,8 @@
 from report_builder.ReportBuilder import ReportBuilder
+from panopto_rest_api.panopto_oauth2 import PanoptoOAuth2
+from panopto_rest_api.panopto_interface import Panopto
 import settings
+import pandas as pd
 from pprint import pprint
 from datetime import datetime
 
@@ -7,7 +10,8 @@ report_builder = ReportBuilder(
     settings.HOST, settings.USERNAME, settings.PASSWORD)
 
 # DELIVERY ID - hardcoded Alison's test video
-delivery_id = '84cef7f7-f168-4a80-9a5a-ac100144db29'
+# delivery_id = '84cef7f7-f168-4a80-9a5a-ac100144db29'
+delivery_id = 'ef62eef6-b2ae-474f-a333-ac5901232c1a'
 
 
 # detailed info about every unique view
@@ -33,5 +37,31 @@ format = '%d-%m-%Y %H.%M.%S'
 datetime_string = now.strftime(format)
 
 # output the detailed session views dataframe to CSV
-session_views_df.to_csv(
-    f'data/session_views_{datetime_string}.csv', index=False)
+# session_views_df.to_csv(
+#     f'data/session_views_{datetime_string}.csv', index=False)
+
+## TESTING REST API ###
+
+oauth2 = PanoptoOAuth2(settings.SERVER,
+                       settings.CLIENT_ID,
+                       settings.CLIENT_SECRET,
+                       True)
+
+panopto = Panopto(settings.SERVER, True, oauth2)
+
+session = panopto.get_session(session_id=delivery_id)
+
+session_data = {
+    'SessionID': session['Id'],
+    'SessionName': session['Name'],
+    'Description': session['Description'],
+    'Duration': session['Duration'],
+    'EmbedURL': session['Urls']['EmbedUrl'],
+    'FolderId': session['FolderDetails']['Id'],
+    'FolderName': session['FolderDetails']['Name']
+}
+
+session_df = pd.DataFrame([session_data])
+
+session_df.to_csv(
+    f'data/session_overview_{datetime_string}.csv', index=False)

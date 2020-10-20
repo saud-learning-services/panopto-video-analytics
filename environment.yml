@@ -1,8 +1,12 @@
 name: panopto-data-api
 channels:
+  - anaconda
   - conda-forge
 dependencies:
   - python-dotenv
   - zeep
   - urllib3
   - pip
+  - pip:
+    - requests
+    - requests_oauthlib
