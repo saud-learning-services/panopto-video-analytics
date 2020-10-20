@@ -34,7 +34,7 @@ SessionId | UserId | Date | DateTime | StartPosition | StartReason | StopPositio
 84cef7f7 | ab5101848a3f | 2020-10-16 | 2020-10-16 22:30:21.683000+00:00 | 0.5 | Seek | 30.94654 | End | 30.44654
 
 ### COMM 290 Sample
-> Generated Oct. 19 ~3:30pm
+> Generated Oct. 20 ~3:30pm
 
 `Folder Name = COMM 290`
 
