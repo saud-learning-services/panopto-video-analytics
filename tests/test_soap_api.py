@@ -1,4 +1,4 @@
-from panopto_api.AuthenticatedClientFactory import AuthenticatedClientFactory
+from panopto_soap_api.AuthenticatedClientFactory import AuthenticatedClientFactory
 import unittest
 
 
@@ -20,5 +20,5 @@ class TestSoapApi(unittest.TestCase):
         username = 'admin'
         password = 'password'
         auth = AuthenticatedClientFactory(
-                host, username, password, verify_ssl=host != 'localhost')
+            host, username, password, verify_ssl=host != 'localhost')
         self.assertIsNotNone(auth)

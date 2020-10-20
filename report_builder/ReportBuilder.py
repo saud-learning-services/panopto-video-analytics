@@ -1,8 +1,16 @@
-from panopto_api.AuthenticatedClientFactory import AuthenticatedClientFactory
+from panopto_soap_api.AuthenticatedClientFactory import AuthenticatedClientFactory
 from datetime import datetime, date, timedelta
+import pandas as pd
 
 
 class ReportBuilder:
+
+    @staticmethod
+    def _add_fields(record):
+        record['Date'] = record['Time'].date()
+        record['StopPosition'] = record['StartPosition'] + \
+            record['SecondsViewed']
+        return record
 
     def __init__(self, host, username, password):
         self.host = host
@@ -10,27 +18,62 @@ class ReportBuilder:
         self.password = password
 
         # authorization
-        self.auth = AuthenticatedClientFactory(host, username, password, verify_ssl=True)
+        self.auth = AuthenticatedClientFactory(
+            host, username, password, verify_ssl=True)
         self.usage_client = self.auth.get_client('UsageReporting')
 
     def get_session_extended_details(self, session_id):
         '''
-        Returns the result of calling the "UsageReporting.GetSessionExtendedDetailedUsage" method
+        Calls the "UsageReporting.GetSessionExtendedDetailedUsage" method
+        Gets all records by iterating through all pages
+        Adds/renames several columns and converts to dataframe
+        Returns the df
         '''
 
+        # Variables to get the last 30 days of data
         now = datetime.now()
         last_month = now - timedelta(days=30)
 
-        page_size = 50
+        page_size = 25
+        page_num = 0
 
-        resp = self.usage_client.call_service(
-            'GetSessionExtendedDetailedUsage',
-            sessionId=session_id,
-            pagination={'MaxNumberResults': page_size},
-            beginRange=last_month,
-            endRange=now)
+        records = []
 
-        return resp
+        # initialize to 500 (any positive int will do)
+        # this will help us keep count for pagination
+        records_remaining = 500
+
+        while True:
+            if records_remaining <= 0:
+                break
+
+            resp = self.usage_client.call_service(
+                'GetSessionExtendedDetailedUsage',
+                sessionId=session_id,
+                pagination={'MaxNumberResults': page_size,
+                            'PageNumber': page_num},
+                beginRange=last_month,
+                endRange=now)
+
+            chunk = resp['PagedResponses']['ExtendedDetailedUsageResponseItem']
+
+            if len(chunk) > 0:
+                records = [*records, *chunk]
+                records_remaining = resp['TotalNumberResponses'] - \
+                    (page_size * (page_num + 1))
+
+            page_num += 1
+
+        records = map(self._add_fields, records)
+
+        cols = ['SessionId', 'UserId', 'Date', 'Time', 'StartPosition', 'StartReason',
+                'StopPosition', 'StopReason', 'SecondsViewed']
+
+        df = pd.DataFrame(records, columns=cols)
+
+        df = df.rename(columns={'Time': 'DateTime'})
+
+        return df
 
     def get_session_details(self, session_id):
         '''
