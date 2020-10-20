@@ -1,4 +1,4 @@
-name: python-soap
+name: panopto-data-api
 channels:
   - conda-forge
 dependencies:
