@@ -1,5 +1,6 @@
 from panopto_soap_api.AuthenticatedClientFactory import AuthenticatedClientFactory
 from datetime import datetime, date, timedelta
+from pprint import pprint
 import pandas as pd
 
 
@@ -64,9 +65,9 @@ class ReportBuilder:
 
             page_num += 1
 
-        records = map(self._add_fields, records)
+        records = list(map(self._add_fields, records))
 
-        cols = ['SessionId', 'UserId', 'Date', 'Time', 'StartPosition', 'StartReason',
+        cols = ['SessionId', 'UserId', 'Date', 'Time', 'PlaybackSpeed', 'StartPosition', 'StartReason',
                 'StopPosition', 'StopReason', 'SecondsViewed']
 
         df = pd.DataFrame(records, columns=cols)
