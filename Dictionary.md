@@ -33,5 +33,17 @@ SessionId | UserId | Date | DateTime | StartPosition | StartReason | StopPositio
 84cef7f7 | ab5101848a3f | 2020-10-16 | 2020-10-16 22:27:12.380000+00:00 | 15.595997 | Seek | 26.321004 | Pause | 10.725007
 84cef7f7 | ab5101848a3f | 2020-10-16 | 2020-10-16 22:30:21.683000+00:00 | 0.5 | Seek | 30.94654 | End | 30.44654
 
+### COMM 290 Sample
+> Generated Oct. 19 ~3:30pm
+
+`Folder Name = COMM 290`
+
+    .
+    ├── <Folder Name>
+    │   ├── sessions_summary.csv
+    │   └── Session Viewing Details
+    │       ├──<Session Name>_<Session ID>.csv
+    │       └── ...
+
 # Data Questions/Tests
 - watch the same half of the video twice as an anonymous user (incognito in unique browser, as unique as possible) -> does this look like they watched 50% or 100% of the video
