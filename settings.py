@@ -10,6 +10,7 @@ PASSWORD = os.getenv('PASSWORD')
 
 # For REST API
 SERVER = os.getenv('SERVER')
+ASPXAUTH = os.getenv('ASPXAUTH')
 CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 
