@@ -21,9 +21,14 @@ ASPXAUTH = {.ASPXAUTH-token-found-in-cookies}
   - Note it is currently hardcoded to get the last 30 days of data with a page size of 25 records (increase this size if working with larger courses however it will always fetch ALL records)
 - `python get_folder_session_data.py`
   - gets session view and session summary data for all sessions in folder = folder_id
-  - hardcoded folder id
+  - folder id hardcoded in file
+- `python get_table_of_contents.py`
+  - gets "Contents" data for a session specified by session_id
+  - session id hardcoded in file
+  - outputs raw response converted to CSV
+  - unusual Date data coming back but will we even need it?
 
-#### outputs
+#### Output structure of `get_folder_session_data.py`
 
     .
     ├── <Folder Name>
@@ -31,5 +36,3 @@ ASPXAUTH = {.ASPXAUTH-token-found-in-cookies}
     │   └── Session Viewing Details
     │       ├──<Session Name>_<Session ID>.csv
     │       └── ...
-
-- `test_get_timestamps.py` sandbox environment to testing timestamp data response JSON (specify session by delivery_id)

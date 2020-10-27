@@ -22,8 +22,7 @@ oauth2 = PanoptoOAuth2(settings.SERVER,
 panopto_rest = Panopto(settings.SERVER, True, oauth2)
 
 
-# COMM 290 [Hardcoded]
-folder_id = '55a90663-2a10-43ed-a351-ac2a016cf839'
+folder_id = 'PASTE ID HERE'
 folder_data = panopto_rest.get_folder(folder_id=folder_id)
 folder_name = folder_data['Name']
 

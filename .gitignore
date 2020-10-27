@@ -77,7 +77,7 @@ target/
 # celery beat schedule file
 celerybeat-schedule
 
-# SageMath parsed files
+# SaeMath parsed files
 *.sage.py
 
 # dotenv
@@ -98,3 +98,5 @@ data/*
 !data/.gitkeep
 
 examples
+
+data_archive
