@@ -1,7 +1,7 @@
 ## 🌏 Make an environment
 
 ```
-HOST = ubc.ca.panopto.com
+HOST_URL = ubc.ca.panopto.com
 USERNAME = {panopto-username}
 PASSWORD = {panopto-password}
 
