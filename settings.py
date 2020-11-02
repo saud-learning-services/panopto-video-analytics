@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # For SOAP API
-HOST = os.getenv('HOST')
+HOST = os.getenv('HOST_URL')
 USERNAME = os.getenv('USERNAME')
 PASSWORD = os.getenv('PASSWORD')
 
