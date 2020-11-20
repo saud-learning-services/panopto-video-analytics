@@ -10,7 +10,7 @@ import os
 
 
 # SOAP API Initialization
-report_builder = ReportBuilder(settings.HOST,
+report_builder = ReportBuilder(settings.SERVER,
                                settings.USERNAME,
                                settings.PASSWORD)
 
@@ -22,7 +22,7 @@ oauth2 = PanoptoOAuth2(settings.SERVER,
 panopto_rest = Panopto(settings.SERVER, True, oauth2)
 
 
-folder_id = 'PASTE ID HERE'
+folder_id = '974e9bd7-56fe-44f2-9a08-ab5101848a93'
 folder_data = panopto_rest.get_folder(folder_id=folder_id)
 folder_name = folder_data['Name']
 

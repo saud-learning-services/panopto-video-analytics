@@ -6,9 +6,10 @@ dependencies:
   - python-dotenv
   - python>= 3.7
   - zeep
+  - pytz
   - pandas
   - urllib3
   - pip
   - pip:
-    - requests
-    - requests_oauthlib
+      - requests
+      - requests_oauthlib
