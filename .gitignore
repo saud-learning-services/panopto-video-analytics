@@ -99,7 +99,7 @@ data/*
 
 examples
 
-data_archive
+archive
 
 *.cache
 

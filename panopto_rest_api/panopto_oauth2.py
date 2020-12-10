@@ -128,9 +128,9 @@ class PanoptoOAuth2():
         '''
         with open(self.cache_file, 'wb') as fw:
             pickle.dump(token, fw)
-        print('OAuth2 flow provided the token below. Cache it to {0}'.format(
-            self.cache_file))
-        pprint.pprint(token, indent=4)
+        # print('OAuth2 flow provided the token below. Cache it to {0}'.format(
+        #     self.cache_file))
+        # pprint.pprint(token, indent=4)
 
 
 class RedirectTCPServer(ThreadingTCPServer):
