@@ -1,9 +1,11 @@
 name: panopto-data-api
 channels:
+  - omnia
   - anaconda
   - conda-forge
 dependencies:
   - python-dotenv
+  - termcolor
   - python>= 3.7
   - zeep
   - pytz

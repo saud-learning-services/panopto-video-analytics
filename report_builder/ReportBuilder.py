@@ -33,7 +33,8 @@ class ReportBuilder:
 
         # Variables to get the last 30 days of data
         now = datetime.now()
-        last_month = now - timedelta(days=30)
+        sept = date(2020, 9, 1)
+        # last_month = now - timedelta(days=30)
 
         page_size = 150
         page_num = 0
@@ -53,7 +54,7 @@ class ReportBuilder:
                 sessionId=session_id,
                 pagination={'MaxNumberResults': page_size,
                             'PageNumber': page_num},
-                beginRange=last_month,
+                beginRange=sept,
                 endRange=now)
 
             # if the response has no viewing data just skip it
@@ -87,12 +88,13 @@ class ReportBuilder:
         '''
 
         now = datetime.now()
-        last_month = now - timedelta(days=30)
 
+        # last_month = now - timedelta(days=30)
+        sept = date(2020, 9, 1)
         resp = self.usage_client.call_service(
             'GetSessionDetailedUsage',
             sessionId=session_id,
-            beginRange=last_month,
+            beginRange=sept,
             endRange=now)
 
         return resp
@@ -103,12 +105,13 @@ class ReportBuilder:
         '''
 
         now = date.today()
-        last_month = now - timedelta(days=30)
+        sept = date(2020, 9, 1)
+        # last_month = now - timedelta(days=30)
 
         resp = self.usage_client.call_service(
             'GetSessionSummaryUsage',
             sessionId=session_id,
-            beginRange=last_month,
+            beginRange=sept,
             endRange=now,
             granularity='Daily')
 
