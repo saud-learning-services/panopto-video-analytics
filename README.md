@@ -1,3 +1,7 @@
+# Panopto Video Analytics Data API
+
+An interface for getting viewing data from Panopto sessions. Specify Panopto folders in `courses.csv` to add them to the database.
+
 ## 🌏 Make an environment
 
 ```
@@ -12,27 +16,11 @@ CLIENT_SECRET = {panopto-api-client-secret}
 ASPXAUTH = {.ASPXAUTH-token-found-in-cookies}
 ```
 
-## ⭐️ To Run
+#### Output structure of database
 
-- setup environment from `environment.yml`
-- `conda activate panopto-data-api`
-- `python download_reports.py`
-  - at the moment this will create a timestamped CSV with detailed session viewing data in the `/data` directory
-  - Note it is currently hardcoded to get the last 30 days of data with a page size of 25 records (increase this size if working with larger courses however it will always fetch ALL records)
-- `python get_folder_session_data.py`
-  - gets session view and session summary data for all sessions in folder = folder_id
-  - folder id hardcoded in file
-- `python get_table_of_contents.py`
-  - gets "Contents" data for a session specified by session_id
-  - session id hardcoded in file
-  - outputs raw response converted to CSV
-  - unusual Date data coming back but will we even need it?
-
-#### Output structure of `get_folder_session_data.py`
+For each (course) panopto folder specified in courses.csv, `database` will have
 
     .
-    ├── <Folder Name>
-    │   ├── sessions_summary.csv
-    │   └── Session Viewing Details
-    │       ├──<Session Name>_<Session ID>.csv
-    │       └── ...
+    ├── <Folder Name>[<Folder ID>]
+    │   ├── videos_overview.csv
+    │   └── viewing_activity.csv
