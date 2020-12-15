@@ -63,7 +63,7 @@ class ChunkedDataHandler():
             for sid in unique_session_ids:
                 self.__chunk_data(sid)
     
-    def __chunk_data(self, session_id):
+    def __chunk_data(self, session_id, videos_overview_df):
         '''
         '''
         session = panopto_rest.get_session(session_id=sid)
