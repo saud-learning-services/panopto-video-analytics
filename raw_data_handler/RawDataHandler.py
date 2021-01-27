@@ -136,7 +136,7 @@ class RawDataHandler():
         sessions = self.rest_interface.get_sessions(folder_id=folder_id)
         time.sleep(1)
 
-        columns = ['FolderId',
+        columns = ['FolderID',
                    'FolderName',
                    'SessionID',
                    'SessionName',
@@ -146,7 +146,7 @@ class RawDataHandler():
         data = []
         for session in sessions:
             row = {
-                'FolderId': session['FolderDetails']['Id'],
+                'FolderID': session['FolderDetails']['Id'],
                 'FolderName': session['FolderDetails']['Name'],
                 'SessionID': session['Id'],
                 'SessionName': session['Name'],
@@ -166,10 +166,10 @@ class RawDataHandler():
 
         sessions = self.rest_interface.get_sessions(folder_id=folder_id)
 
-        columns = ['SessionId',
-                   'UserId',
+        columns = ['SessionID',
+                   'UserID',
                    'Date',
-                   'Time',
+                   'DateTime',
                    'PlaybackSpeed',
                    'StartPosition',
                    'StartReason',

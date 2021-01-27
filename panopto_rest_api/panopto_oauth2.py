@@ -85,6 +85,7 @@ class PanoptoOAuth2():
         print()
         print('Get a new access token with authorization code, which is provided as return path: {0}'.format(
             redirected_path))
+        print(self.client_secret)
         session.fetch_token(self.access_token_endpoint,
                             client_secret=self.client_secret, authorization_response=redirected_path)
         self.__save_token_to_cache(session.token)
