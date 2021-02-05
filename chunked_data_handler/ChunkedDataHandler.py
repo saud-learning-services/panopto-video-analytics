@@ -220,15 +220,15 @@ class ChunkedDataHandler():
         '''
         Calculates unique and completed viewers for a given session
         '''
-        session = videos_overview_df.loc[videos_overview_df['SessionID'] == session_id]
+        session = videos_overview_df.loc[videos_overview_df['SessionId'] == session_id]
         session = session.iloc[0]
         session_duration = session['Duration']
 
         # grab the viewing activity for the session
-        session_viewing_activity = viewing_activity_df.loc[viewing_activity_df['SessionID'] == session_id]
+        session_viewing_activity = viewing_activity_df.loc[viewing_activity_df['SessionId'] == session_id]
 
         # get a list of unique user id's from the dataframe
-        user_ids = list(session_viewing_activity['UserID'])
+        user_ids = list(session_viewing_activity['UserId'])
         unique_user_ids = list(dict.fromkeys(user_ids))
 
         unique_viewer_count = len(unique_user_ids)
@@ -238,7 +238,7 @@ class ChunkedDataHandler():
         # for every unique user (viewer)
         for user_id in unique_user_ids:
             view_data = []
-            user_views = session_viewing_activity.loc[session_viewing_activity['UserID'] == user_id]
+            user_views = session_viewing_activity.loc[session_viewing_activity['UserId'] == user_id]
 
             for index, view in user_views.iterrows():
                 view_tuple = (
@@ -322,13 +322,13 @@ class ChunkedDataHandler():
         for index, video in videos_overview_df.iterrows():
 
             video_duration = video['Duration']
-            session_id = video['SessionID']
+            session_id = video['SessionId']
 
             session, unique_viewer_count, completed_count = self.__get_viewers_count(session_id, videos_overview_df, viewing_activity_df)
 
             session_record = {
                 'Order': index,
-                'SessionID': session['SessionID'],
+                'SessionId': session['SessionId'],
                 'SessionName': session['SessionName'],
                 'Description': session['Description'],
                 'Duration': session['Duration'],
@@ -343,16 +343,16 @@ class ChunkedDataHandler():
             chunks = self.__make_chunk_list(video_duration)
 
             # Parse out the viewing data for THIS SESSION/VIDEO
-            session_viewing_data = viewing_activity_df.loc[viewing_activity_df['SessionID'] == session_id]
+            session_viewing_data = viewing_activity_df.loc[viewing_activity_df['SessionId'] == session_id]
 
             # get a list of unique user id's from the dataframe (Users who have viewed the session)
-            user_ids = list(session_viewing_data['UserID'])
+            user_ids = list(session_viewing_data['UserId'])
             unique_user_ids = list(dict.fromkeys(user_ids))
 
             # for every unique user (viewer)
             for user_id in unique_user_ids:
                 # select the rows that correlate to that user
-                user_views = session_viewing_data.loc[session_viewing_data['UserID'] == user_id]
+                user_views = session_viewing_data.loc[session_viewing_data['UserId'] == user_id]
 
                 # get a list of all dates in the 'DateTime' column - converted to PST (from UTC)
                 datetimes = list(user_views['DateTime'])
@@ -428,8 +428,8 @@ class ChunkedDataHandler():
                                 completed = True
 
                             record = {
-                                'SessionID': session_id,
-                                'UserID': user_id,
+                                'SessionId': session_id,
+                                'UserId': user_id,
                                 'Date': date,
                                 'ChunkIndex': chunk['index'],
                                 'ChunkStart': chunk['start'],

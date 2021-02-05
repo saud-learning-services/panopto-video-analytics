@@ -2,7 +2,7 @@ from panopto_soap_api.AuthenticatedClientFactory import AuthenticatedClientFacto
 from panopto_rest_api.panopto_oauth2 import PanoptoOAuth2
 from panopto_rest_api.panopto_interface import Panopto
 from datetime import datetime, timedelta
-from progress.spinner import Spinner
+# from progress.spinner import Spinner
 from termcolor import cprint
 import pandas as pd
 import settings
@@ -23,6 +23,10 @@ class RawDataHandler():
         Adds column for Stop Position
         '''
         record['Date'] = record['Time'].date()
+
+        # Rename 'Time' to 'DateTime'
+        record['DateTime'] = record.pop('Time')
+
 
         stop_position = record['StartPosition'] + record['SecondsViewed']
         record['StopPosition'] = stop_position
@@ -138,7 +142,7 @@ class RawDataHandler():
 
         columns = ['FolderID',
                    'FolderName',
-                   'SessionID',
+                   'SessionId',
                    'SessionName',
                    'Description',
                    'Duration']
@@ -148,7 +152,7 @@ class RawDataHandler():
             row = {
                 'FolderID': session['FolderDetails']['Id'],
                 'FolderName': session['FolderDetails']['Name'],
-                'SessionID': session['Id'],
+                'SessionId': session['Id'],
                 'SessionName': session['Name'],
                 'Description': session['Description'],
                 'Duration': session['Duration']
@@ -166,8 +170,8 @@ class RawDataHandler():
 
         sessions = self.rest_interface.get_sessions(folder_id=folder_id)
 
-        columns = ['SessionID',
-                   'UserID',
+        columns = ['SessionId',
+                   'UserId',
                    'Date',
                    'DateTime',
                    'PlaybackSpeed',
@@ -205,7 +209,7 @@ class RawDataHandler():
         records = []
         records_remaining = None
 
-        spinner = Spinner(' ⏳ ')
+        # spinner = Spinner(' ⏳ ')
         while True:
             if records_remaining is not None and records_remaining <= 0:
                 break
@@ -231,7 +235,7 @@ class RawDataHandler():
 
             page_num += 1
 
-            spinner.next()
+            # spinner.next()
 
         print('')
         records = list(map(self.__add_fields, records))
