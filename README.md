@@ -32,6 +32,8 @@ CLIENT_SECRET = {panopto-api-client-secret}
 ASPXAUTH = {.ASPXAUTH-token-found-in-cookies}
 ```
 
+To find your .ASPXAUTH token, login to Panopto using Chrome, go to dev-tools -- Command + Option + J (Mac) or Control + Shift + J (Windows, Linux, Chrome OS) -- under the Application tab, click the URL under Cookies, then copy the value next to .ASPXAUTH
+
 #### Output structure of database
 
 For each (course) panopto folder specified in courses.csv, `database` will have after running `update_database.py`:
