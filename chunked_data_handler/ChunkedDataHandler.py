@@ -5,6 +5,7 @@ import settings
 import os
 import re
 
+
 class ChunkedDataHandler():
     '''
     A class that deals with all the calculations and transformations involved in "chunking" viewing data
@@ -20,11 +21,11 @@ class ChunkedDataHandler():
 
         for d in os.listdir(settings.ROOT + '/database'):
             match = re.search('\[(.*?)\]', d)
-            
+
             # ignore unknown files and folders - ie. don't have [ ] in title
             if not match:
                 continue
-            
+
             # pulls out text from regex match object
             folder_id = match.group(1)
             folder_name = d.split('[')[0]
@@ -64,7 +65,7 @@ class ChunkedDataHandler():
             chunks.append(chunk)
 
         return chunks
-        
+
     @staticmethod
     def __make_pst_date(utc_datetime):
         '''
@@ -73,12 +74,14 @@ class ChunkedDataHandler():
         if isinstance(utc_datetime, str):
             try:
                 # if datetime has microseconds
-                utc_datetime = datetime.strptime(utc_datetime, '%Y-%m-%d %H:%M:%S.%f%z')
+                utc_datetime = datetime.strptime(
+                    utc_datetime, '%Y-%m-%d %H:%M:%S.%f%z')
             except ValueError:
                 # if datetime does not have microseconds
-                utc_datetime = datetime.strptime(utc_datetime, '%Y-%m-%d %H:%M:%S%z')
+                utc_datetime = datetime.strptime(
+                    utc_datetime, '%Y-%m-%d %H:%M:%S%z')
         pst_datetime = utc_datetime.astimezone(timezone('US/Pacific'))
-        return pst_datetime.date() 
+        return pst_datetime.date()
 
     @staticmethod
     def __get_coverage(viewing_data_tuples):
@@ -175,7 +178,7 @@ class ChunkedDataHandler():
 
             # view falls within chunk, add overlap to toal duration
             overlap = (max(chunk_lower_bound, view_lower_bound),
-                    min(chunk_upper_bound, view_upper_bound))
+                       min(chunk_upper_bound, view_upper_bound))
 
             overlap_duration = overlap[1] - overlap[0]
 
@@ -206,7 +209,7 @@ class ChunkedDataHandler():
                 break
 
             overlap = (max(chunk_lower_bound, neighbour[0]),
-                    min(chunk_upper_bound, neighbour[1]))
+                       min(chunk_upper_bound, neighbour[1]))
 
             overlap_duration = overlap[1] - \
                 overlap[0]
@@ -225,7 +228,8 @@ class ChunkedDataHandler():
         session_duration = session['Duration']
 
         # grab the viewing activity for the session
-        session_viewing_activity = viewing_activity_df.loc[viewing_activity_df['SessionId'] == session_id]
+        session_viewing_activity = viewing_activity_df.loc[
+            viewing_activity_df['SessionId'] == session_id]
 
         # get a list of unique user id's from the dataframe
         user_ids = list(session_viewing_activity['UserId'])
@@ -262,7 +266,7 @@ class ChunkedDataHandler():
             if total_duration >= (0.75 * session_duration):
                 # increment count
                 completed_count += 1
-        
+
         return session, unique_viewer_count, completed_count
 
     def __init__(self):
@@ -277,12 +281,13 @@ class ChunkedDataHandler():
         if not folders:
             print('⚠️  Error: could not chunk data -- Database empty or corrupt ⚠️')
             return
-        
+
         # folder_ids = map(folders, lambda x: x['folder_id'])
         for f in folders:
             folder_id = f['folder_id']
             folder_name = f['folder_name']
-            paths = list(map(lambda x: x[0], os.walk(settings.ROOT + '/database')))
+            paths = list(map(lambda x: x[0], os.walk(
+                settings.ROOT + '/database')))
 
             # get the path p that matches this folder id
             p = [p for p in paths if folder_id in p][0]
@@ -293,8 +298,9 @@ class ChunkedDataHandler():
             videos_overview_df = pd.read_csv(overview_path)
             viewing_activity_df = pd.read_csv(activity_path)
 
-            chunked_data, sessions_overview_data = self.__chunk_data(videos_overview_df, viewing_activity_df)
-            
+            chunked_data, sessions_overview_data = self.__chunk_data(
+                videos_overview_df, viewing_activity_df)
+
             chunked_data_df = pd.DataFrame(data=chunked_data)
             sessions_overview_df = pd.DataFrame(data=sessions_overview_data)
 
@@ -303,9 +309,9 @@ class ChunkedDataHandler():
                 os.mkdir(target)
 
             chunked_data_df.to_csv(target + '/chunked_data.csv', index=False)
-            sessions_overview_df.to_csv(target + '/sessions_overview.csv', index=False)
+            sessions_overview_df.to_csv(
+                target + '/sessions_overview.csv', index=False)
 
-    
     def __chunk_data(self, videos_overview_df, viewing_activity_df):
         '''
         Given raw data in the form of two tables:
@@ -324,10 +330,11 @@ class ChunkedDataHandler():
             video_duration = video['Duration']
             session_id = video['SessionId']
 
-            session, unique_viewer_count, completed_count = self.__get_viewers_count(session_id, videos_overview_df, viewing_activity_df)
+            session, unique_viewer_count, completed_count = self.__get_viewers_count(
+                session_id, videos_overview_df, viewing_activity_df)
 
             session_record = {
-                'Order': index,
+                'Order': index + 1,
                 'SessionId': session['SessionId'],
                 'SessionName': session['SessionName'],
                 'Description': session['Description'],
@@ -368,12 +375,13 @@ class ChunkedDataHandler():
                     all_viewing_data = []
                     for index, view in user_views.iterrows():
                         if (self.__make_pst_date(view['DateTime']) == date):
-                            view_tuple = (view['StartPosition'], view['StopPosition'])
+                            view_tuple = (
+                                view['StartPosition'], view['StopPosition'])
                             all_viewing_data.append(view_tuple)
 
                     # coverage is an array of tuples representing timeline coverage
                     coverage = self.__get_coverage(all_viewing_data)
-                    
+
                     for chunk in chunks:
                         chunk_lower_bound = chunk['start']
                         chunk_upper_bound = chunk['end']
@@ -392,7 +400,7 @@ class ChunkedDataHandler():
                                 continue
 
                             overlap = (max(chunk_lower_bound, range_lower_bound),
-                                    min(chunk_upper_bound, range_upper_bound))
+                                       min(chunk_upper_bound, range_upper_bound))
 
                             overlap_duration = overlap[1] - overlap[0]
 
