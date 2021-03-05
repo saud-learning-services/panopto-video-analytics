@@ -149,6 +149,7 @@ class Panopto:
         while True:
             url = 'https://{0}/Panopto/api/v1/folders/{1}/sessions'.format(
                 self.server, folder_id)
+            time.sleep(0.2)
             resp = self.requests_session.get(
                 url=url, params={'pageNumber': str(page_number)})
             if self.__inspect_response_is_retry_needed(resp):
