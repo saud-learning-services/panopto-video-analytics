@@ -11,6 +11,7 @@ dependencies:
   - pytz
   - pandas
   - urllib3
+  - progress
   - pip
   - pip:
       - requests

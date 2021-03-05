@@ -92,10 +92,11 @@ ENV/
 .spyderproject
 .spyproject
 
-*.csv
+database/*
+!database/.gitkeep
 
-data/*
-!data/.gitkeep
+output[CHUNKED]/*
+!output[CHUNKED]/.gitkeep
 
 examples
 
@@ -104,3 +105,5 @@ archive
 *.cache
 
 Tableau
+
+local
