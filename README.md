@@ -51,3 +51,13 @@ For each course in the database, `output[CHUNKED]` will contain the following af
     ├── <Folder Name>[<Folder ID>]
     │   ├── chunked_data.csv
     │   └── session_overview.csv
+
+#### Tableau
+
+> TODO: The action that allows you to click through the COURSE OVERVIEW to the VIDEO OVERVIEW is having issues and has been removed for now ⚠️
+
+Perform the following join with the data output by `output_chunked_data.py`:
+
+<div align="center">
+    <img src="_imgs/tableau-join.png" alt="join" width="600">
+</div>
