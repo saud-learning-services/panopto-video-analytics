@@ -9,7 +9,8 @@ oauth2 = PanoptoOAuth2(settings.SERVER,
                        True)
 rest_interface = Panopto(settings.SERVER, True, oauth2)
 
-results = rest_interface.get_subfolder_ids(
-    'b8f6a68e-60fd-4f74-9939-ac250158ef28')
+# Paste a panopto folder ID here (as string)
+FOLDER_ID = 'abcd-0000'
+results = rest_interface.get_subfolder_ids(FOLDER_ID)
 
 print(results)
