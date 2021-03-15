@@ -143,6 +143,32 @@ class Panopto:
             break
         return data
 
+    def get_subfolder_ids(self, folder_id):
+        '''
+        Given a root folder ID return a list containting the ID's of all
+        subfolders to an arbitrary depth
+
+        RECURSIVE FUNCTION:
+        Base Case - If there are no child folders return an empty list
+        Recursive Case - If there are child folders get their subfolders and append the results to our result
+        '''
+
+        child_folders = self.get_child_folders(folder_id)
+
+        child_folders = child_folders['Results']
+
+        # Base case
+        if not child_folders:
+            return []
+
+        child_folder_ids = list(map(lambda f: f['Id'], child_folders))
+
+        # Recursive case
+        for folder_id in child_folder_ids:
+            child_folder_ids += self.get_subfolder_ids(folder_id)
+
+        return child_folder_ids
+
     def get_sessions(self, folder_id):
         page_number = 0
         data = []

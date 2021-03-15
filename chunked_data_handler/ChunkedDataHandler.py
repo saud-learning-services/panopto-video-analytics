@@ -1,4 +1,5 @@
 from datetime import datetime
+from termcolor import cprint
 from pytz import timezone
 import pandas as pd
 import settings
@@ -286,6 +287,17 @@ class ChunkedDataHandler():
         for f in folders:
             folder_id = f['folder_id']
             folder_name = f['folder_name']
+
+            folder_ids_to_run = pd.read_csv('courses.csv')[
+                'PanoptoFolderID'].to_list()
+
+            if folder_id not in folder_ids_to_run:
+                cprint(
+                    f'\n ⏩ Skipping {folder_name} from database. Not in courses.csv', 'yellow')
+                continue
+
+            print(f'\n ⛏ Chunking data for: {folder_name} ({folder_id})...')
+
             paths = list(map(lambda x: x[0], os.walk(
                 settings.ROOT + '/database')))
 
@@ -339,8 +351,10 @@ class ChunkedDataHandler():
                 'SessionName': session['SessionName'],
                 'Description': session['Description'],
                 'Duration': session['Duration'],
-                'FolderID': session['FolderID'],
-                'FolderName': session['FolderName'],
+                'RootFolderID': session['RootFolderID'],
+                'RootFolderName': session['RootFolderName'],
+                'ContainingFolderID': session['ContainingFolderId'],
+                'ContainingFolderName': session['ContainingFolderName'],
                 'UniqueViewers': unique_viewer_count,
                 'CompletedViewerCount(75%Coverage)': completed_count
             }
