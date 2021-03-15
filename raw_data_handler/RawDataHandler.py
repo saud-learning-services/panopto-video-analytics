@@ -27,7 +27,6 @@ class RawDataHandler():
         # Rename 'Time' to 'DateTime'
         record['DateTime'] = record.pop('Time')
 
-
         stop_position = record['StartPosition'] + record['SecondsViewed']
         record['StopPosition'] = stop_position
 
@@ -84,7 +83,10 @@ class RawDataHandler():
                 begin_range = last_fetched + one_second
             else:
                 # starts Sept 01 2020 at 12:00am
-                begin_range = datetime.fromisoformat('2020-09-01 00:00:00')
+                # begin_range = datetime.fromisoformat('2020-09-01 00:00:00')
+
+                # set a arbitrary date far back enough to get ALL viewing data
+                begin_range = datetime.fromisoformat('2010-01-01 00:00:00')
 
             utcnow_date = datetime.utcnow().date()
             one_day = timedelta(days=1)
@@ -92,10 +94,25 @@ class RawDataHandler():
             end_of_day = datetime.max.time()
             end_range = datetime.combine(day_prior, end_of_day)
 
-            all_videos_overview_df = self.__get_videos_overview(fid)
-            viewing_data_df = self.__get_folder_viewing_data(fid,
-                                                             begin_range,
-                                                             end_range)
+            # What if the folder has subfolders? What if those subfolders have subfolders?
+            # We need to get all subfolders contained under this root folder
+
+            subfolder_ids = self.rest_interface.get_subfolder_ids(fid)
+
+            all_folders_to_query = [fid] + subfolder_ids
+
+            all_videos_overview_dfs = []
+            viewing_data_dfs = []
+
+            for folder_id in all_folders_to_query:
+                all_videos_overview_dfs.append(self.__get_videos_overview(
+                    folder_id=folder_id, root_folder={'Id': fid, 'Name': folder_name}))
+                viewing_data_dfs.append(self.__get_folder_viewing_data(folder_id,
+                                                                       begin_range,
+                                                                       end_range))
+
+            all_videos_overview_df = pd.concat(all_videos_overview_dfs)
+            viewing_data_df = pd.concat(viewing_data_dfs)
 
             database_path = settings.ROOT + '/database'
             target = database_path + f'/{folder_name}[{fid}]'
@@ -132,7 +149,7 @@ class RawDataHandler():
 
             state.to_csv(state_path, index=False)
 
-    def __get_videos_overview(self, folder_id):
+    def __get_videos_overview(self, folder_id, root_folder):
         '''
         Creates a table (df) summarizing all the videos in the given folder
         '''
@@ -140,8 +157,10 @@ class RawDataHandler():
         sessions = self.rest_interface.get_sessions(folder_id=folder_id)
         time.sleep(1)
 
-        columns = ['FolderID',
-                   'FolderName',
+        columns = ['RootFolderID',
+                   'RootFolderName',
+                   'ContainingFolderId',
+                   'ContainingFolderName',
                    'SessionId',
                    'SessionName',
                    'Description',
@@ -150,8 +169,10 @@ class RawDataHandler():
         data = []
         for session in sessions:
             row = {
-                'FolderID': session['FolderDetails']['Id'],
-                'FolderName': session['FolderDetails']['Name'],
+                'RootFolderID': root_folder['Id'],
+                'RootFolderName': root_folder['Name'],
+                'ContainingFolderId': session['FolderDetails']['Id'],
+                'ContainingFolderName': session['FolderDetails']['Name'],
                 'SessionId': session['Id'],
                 'SessionName': session['Name'],
                 'Description': session['Description'],
@@ -209,7 +230,6 @@ class RawDataHandler():
         records = []
         records_remaining = None
 
-        # spinner = Spinner(' ⏳ ')
         while True:
             if records_remaining is not None and records_remaining <= 0:
                 break
