@@ -1,4 +1,5 @@
 from datetime import datetime
+from progress.spinner import Spinner
 from termcolor import cprint
 from pytz import timezone
 import pandas as pd
@@ -283,7 +284,16 @@ class ChunkedDataHandler():
             print('⚠️  Error: could not chunk data -- Database empty or corrupt ⚠️')
             return
 
-        # folder_ids = map(folders, lambda x: x['folder_id'])
+        # Lists to hold each dataframe we create for each folder
+        # These get concatinated into a single dataframe at the end for Tableau
+        tableau_chunked_data_dfs = []
+        tableau_sessions_overview_dfs = []
+
+        # Check to see if a Tableau folder already exists and if not make one
+        tableau_target = f'output[CHUNKED]/tableau'
+        if not os.path.isdir(tableau_target):
+            os.mkdir(tableau_target)
+
         for f in folders:
             folder_id = f['folder_id']
             folder_name = f['folder_name']
@@ -293,9 +303,9 @@ class ChunkedDataHandler():
 
             if folder_id not in folder_ids_to_run:
                 cprint(
-                    f'\n ⏩ Skipping {folder_name} from database. Not in courses.csv', 'yellow')
+                    f'\n\n ⏩ Skipping {folder_name} from database. Not in courses.csv', 'yellow')
                 continue
-
+            
             print(f'\n ⛏ Chunking data for: {folder_name} ({folder_id})...')
 
             paths = list(map(lambda x: x[0], os.walk(
@@ -316,6 +326,10 @@ class ChunkedDataHandler():
             chunked_data_df = pd.DataFrame(data=chunked_data)
             sessions_overview_df = pd.DataFrame(data=sessions_overview_data)
 
+            # Push dataframes to Tableau lists - will get concatinated into single df
+            tableau_chunked_data_dfs.append(chunked_data_df)
+            tableau_sessions_overview_dfs.append(sessions_overview_df)
+
             target = f'output[CHUNKED]/{folder_name}[{folder_id}]'
             if not os.path.isdir(target):
                 os.mkdir(target)
@@ -323,6 +337,20 @@ class ChunkedDataHandler():
             chunked_data_df.to_csv(target + '/chunked_data.csv', index=False)
             sessions_overview_df.to_csv(
                 target + '/sessions_overview.csv', index=False)
+
+        print('\n\n📊 Outputting data for Tableau...')
+        # Concatinate and output the tables for Tableau
+        tableau_chunked_df = pd.concat(tableau_chunked_data_dfs)
+        tableau_sessions_df = pd.concat(tableau_sessions_overview_dfs)
+
+        # Add the Order column
+        # tableau_sessions_df.insert(
+        #     0, 'Order', range(1, 1 + len(tableau_sessions_df)))
+
+        tableau_chunked_df.to_csv(
+            tableau_target + '/chunked_data.csv', index=False)
+        tableau_sessions_df.to_csv(
+            tableau_target + '/sessions_overview.csv', index=False)
 
     def __chunk_data(self, videos_overview_df, viewing_activity_df):
         '''
@@ -337,10 +365,15 @@ class ChunkedDataHandler():
         chunked_data = []
         session_summary_data = []
 
+        spinner = Spinner('     ⏳')
+
         for index, video in videos_overview_df.iterrows():
 
             video_duration = video['Duration']
             session_id = video['SessionId']
+
+            # advance the progress spinner
+            spinner.next()
 
             session, unique_viewer_count, completed_count = self.__get_viewers_count(
                 session_id, videos_overview_df, viewing_activity_df)
@@ -372,6 +405,7 @@ class ChunkedDataHandler():
 
             # for every unique user (viewer)
             for user_id in unique_user_ids:
+
                 # select the rows that correlate to that user
                 user_views = session_viewing_data.loc[session_viewing_data['UserId'] == user_id]
 
