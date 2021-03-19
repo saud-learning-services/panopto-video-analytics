@@ -1,4 +1,4 @@
-name: panopto-data-api
+name: panopto-video-analytics
 channels:
   - omnia
   - anaconda
