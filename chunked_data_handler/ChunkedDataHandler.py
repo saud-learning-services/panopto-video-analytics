@@ -305,7 +305,6 @@ class ChunkedDataHandler():
                 cprint(
                     f'\n\n ⏩ Skipping {folder_name} from database. Not in courses.csv', 'yellow')
                 continue
-            
             print(f'\n ⛏ Chunking data for: {folder_name} ({folder_id})...')
 
             paths = list(map(lambda x: x[0], os.walk(
