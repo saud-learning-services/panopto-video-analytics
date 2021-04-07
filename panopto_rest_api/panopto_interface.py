@@ -91,39 +91,6 @@ class Panopto:
             break
         return data
 
-        def get_timestamps(self, session_id):
-            """
-            Return timestamps (table of contents) in JSON format for specific session
-            """
-
-            self.requests_session.headers.update(
-                {
-                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15",
-                    "Content-Type": "video/mp4",
-                }
-            )
-            self.requests_session.cookies = requests.utils.cookiejar_from_dict(
-                {".ASPXAUTH": settings.ASPXAUTH}
-            )
-
-            url = f"https://{settings.SERVER}/Panopto/Pages/Viewer/DeliveryInfo.aspx"
-            params = {"deliveryId": session_id, "responseType": "json"}
-            resp = self.requests_session.post(url=url, params=params)
-
-            if resp.status_code != 200:
-                raise RuntimeError(
-                    f"DeliveryInfo response came with status code {resp.status_code}\nCheck ASPXAUTH token."
-                )
-
-            delivery_info = json.loads(resp.text)
-            if "ErrorMessage" in delivery_info.keys():
-                message = delivery_info["ErrorMessage"]
-                raise RuntimeError(
-                    f"DeliveryInfo response came with message: {message}\nCheck ASPXAUTH token."
-                )
-
-        return delivery_info["Delivery"]["Timestamps"]
-
     def get_folder(self, folder_id):
         """
         Call GET /api/v1/folders/{id} API and return the response
