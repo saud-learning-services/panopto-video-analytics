@@ -1,5 +1,6 @@
 from datetime import datetime
 from progress.spinner import Spinner
+from pathlib import Path
 from termcolor import cprint
 from pytz import timezone
 import pandas as pd
@@ -21,7 +22,8 @@ class ChunkedDataHandler:
         """
         folders = []
 
-        for d in os.listdir(settings.ROOT + "/database"):
+        database_path = Path(f"{settings.ROOT}/database")
+        for d in os.listdir(database_path):
             match = re.search("\[(.*?)\]", d)
 
             # ignore unknown files and folders - ie. don't have [ ] in title
@@ -291,7 +293,7 @@ class ChunkedDataHandler:
         tableau_sessions_overview_dfs = []
 
         # Check to see if a Tableau folder already exists and if not make one
-        tableau_target = f"output[CHUNKED]/tableau"
+        tableau_target = Path("output[CHUNKED]/tableau")
         if not os.path.isdir(tableau_target):
             os.mkdir(tableau_target)
 
@@ -309,13 +311,14 @@ class ChunkedDataHandler:
                 continue
             print(f"\n ⛏ Chunking data for: {folder_name} ({folder_id})...")
 
-            paths = list(map(lambda x: x[0], os.walk(settings.ROOT + "/database")))
+            database_path = Path(f"{settings.ROOT}/database")
+            paths = list(map(lambda x: x[0], os.walk(database_path)))
 
             # get the path p that matches this folder id
             p = [p for p in paths if folder_id in p][0]
 
-            overview_path = p + "/sessions_overview.csv"
-            activity_path = p + "/viewing_activity.csv"
+            overview_path = Path(p + "/sessions_overview.csv")
+            activity_path = Path(p + "/viewing_activity.csv")
 
             sessions_overview_df = pd.read_csv(overview_path)
             viewing_activity_df = pd.read_csv(activity_path)
@@ -331,12 +334,12 @@ class ChunkedDataHandler:
             tableau_chunked_data_dfs.append(chunked_data_df)
             tableau_sessions_overview_dfs.append(sessions_overview_df)
 
-            target = f"output[CHUNKED]/{folder_name}[{folder_id}]"
+            target = Path(f"output[CHUNKED]/{folder_name}[{folder_id}]")
             if not os.path.isdir(target):
                 os.mkdir(target)
 
-            chunked_data_df.to_csv(target + "/chunked_data.csv", index=False)
-            sessions_overview_df.to_csv(target + "/sessions_overview.csv", index=False)
+            chunked_data_df.to_csv(target / "chunked_data.csv", index=False)
+            sessions_overview_df.to_csv(target / "sessions_overview.csv", index=False)
 
         print("\n\n📊 Outputting data for Tableau...")
         # Concatinate and output the tables for Tableau
@@ -347,9 +350,9 @@ class ChunkedDataHandler:
         # tableau_sessions_df.insert(
         #     0, 'Order', range(1, 1 + len(tableau_sessions_df)))
 
-        tableau_chunked_df.to_csv(tableau_target + "/chunked_data.csv", index=False)
+        tableau_chunked_df.to_csv(tableau_target / "chunked_data.csv", index=False)
         tableau_sessions_df.to_csv(
-            tableau_target + "/sessions_overview.csv", index=False
+            tableau_target / "sessions_overview.csv", index=False
         )
 
     def __chunk_data(self, sessions_overview_df, viewing_activity_df):
