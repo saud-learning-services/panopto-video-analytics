@@ -41,7 +41,7 @@ For each (course) panopto folder specified in courses.csv, `database` will have 
 
     .
     ├── <Folder Name>[<Folder ID>]
-    │   ├── videos_overview.csv
+    │   ├── sessions_overview.csv
     │   └── viewing_activity.csv
 
 #### Output structure of output[CHUNKED]
@@ -51,7 +51,7 @@ For each course in the database, `output[CHUNKED]` will contain the following af
     .
     ├── <Folder Name>[<Folder ID>]
     │   ├── chunked_data.csv
-    │   └── session_overview.csv
+    │   └── sessions_overview.csv
 
 #### Tableau
 
