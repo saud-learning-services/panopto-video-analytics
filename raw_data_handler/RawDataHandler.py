@@ -2,6 +2,7 @@ from panopto_soap_api.AuthenticatedClientFactory import AuthenticatedClientFacto
 from panopto_rest_api.panopto_oauth2 import PanoptoOAuth2
 from panopto_rest_api.panopto_interface import Panopto
 from datetime import datetime, timedelta
+from pathlib import Path
 
 # from progress.spinner import Spinner
 from termcolor import cprint
@@ -56,8 +57,8 @@ class RawDataHandler:
         Public method to fetch Panopto viewing data and commit to the database
         """
 
-        courses_path = settings.ROOT + "/courses.csv"
-        state_path = settings.ROOT + "/raw_data_handler/" + "state.csv"
+        courses_path = Path(f"{settings.ROOT}/courses.csv")
+        state_path = Path(f"{settings.ROOT}/raw_data_handler/state.csv")
         courses = pd.read_csv(courses_path)
         state = pd.read_csv(state_path)
 
@@ -122,21 +123,25 @@ class RawDataHandler:
             all_videos_overview_df = pd.concat(all_videos_overview_dfs)
             viewing_data_df = pd.concat(viewing_data_dfs)
 
-            database_path = settings.ROOT + "/database"
-            target = database_path + f"/{folder_name}[{fid}]"
+            database_path = Path(f"{settings.ROOT}/database")
+            target = database_path / f"/{folder_name}[{fid}]"
 
             if not os.path.isdir(target):
                 os.mkdir(target)
 
+            viewing_data_path = Path(f"{target}/viewing_activity.csv")
+            sessions_overview_path = Path(f"{target}/sessions_overview.csv")
+
             if fid in folder_ids_already_run and os.path.isdir(target):
-                saved_viewing_data_df = pd.read_csv(f"{target}/viewing_activity.csv")
+
+                saved_viewing_data_df = pd.read_csv(viewing_data_path)
                 viewing_data_df = pd.concat(
                     [viewing_data_df, saved_viewing_data_df], ignore_index=True
                 )
 
                 # empty the target folder contents
-                os.remove(f"{target}/sessions_overview.csv")
-                os.remove(f"{target}/viewing_activity.csv")
+                os.remove(sessions_overview_path)
+                os.remove(viewing_data_path)
 
                 # update entry in state
                 state.loc[
@@ -151,10 +156,8 @@ class RawDataHandler:
                 }
                 state = state.append(entry, ignore_index=True)
 
-            all_videos_overview_df.to_csv(
-                f"{target}/sessions_overview.csv", index=False
-            )
-            viewing_data_df.to_csv(f"{target}/viewing_activity.csv", index=False)
+            all_videos_overview_df.to_csv(sessions_overview_path, index=False)
+            viewing_data_df.to_csv(viewing_data_path, index=False)
 
             state.to_csv(state_path, index=False)
 
