@@ -51,18 +51,21 @@ CLIENT_SECRET = <panopto-api-client-secret>
 
 Ensure you have anaconda properly [installed](https://docs.anaconda.com/anaconda/install/) using the `conda` command
 
-`conda --version`
-conda 4.9.2 <-- expample output
+- `conda --version`
+  `-> conda 4.9.2 # example output`
 
 Install the environment using the `environment.yml` file (may take a few minutes)
-`conda env create -f environment.yml`
+
+- `conda env create -f environment.yml`
 
 Activate the environment
-`conda activate panopto-video-analytics`
+
+- `conda activate panopto-video-analytics`
 
 Fill in `courses.csv` and run the scripts
-`python update_database.py`
-`python output_chunked_data.py`
+
+- `python update_database.py`
+- `python output_chunked_data.py`
 
 ## Output structure of /database
 
