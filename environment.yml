@@ -12,6 +12,7 @@ dependencies:
   - pandas
   - urllib3
   - progress
+  - colorama
   - pip
   - pip:
       - requests
