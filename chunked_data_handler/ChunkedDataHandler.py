@@ -1,13 +1,15 @@
 from datetime import datetime
-from progress.spinner import Spinner
 from pathlib import Path
 from termcolor import cprint
 from pytz import timezone
 import pandas as pd
+import colorama
 import settings
 import os
 import re
 
+# You need this for termcolor to display properly in windows terminal'
+colorama.init()
 
 class ChunkedDataHandler:
     """
@@ -305,11 +307,11 @@ class ChunkedDataHandler:
 
             if folder_id not in folder_ids_to_run:
                 cprint(
-                    f"\n\n ⏩ Skipping {folder_name} from database. Not in courses.csv",
+                    f"\n\nSkipping {folder_name} from database. Not in courses.csv",
                     "yellow",
                 )
                 continue
-            print(f"\n ⛏ Chunking data for: {folder_name} ({folder_id})...")
+            print(f"\nChunking data for: {folder_name} ({folder_id})...")
 
             database_path = Path(f"{settings.ROOT}/database")
             paths = list(map(lambda x: x[0], os.walk(database_path)))
@@ -341,7 +343,7 @@ class ChunkedDataHandler:
             chunked_data_df.to_csv(target / "chunked_data.csv", index=False)
             sessions_overview_df.to_csv(target / "sessions_overview.csv", index=False)
 
-        print("\n\n📊 Outputting data for Tableau...")
+        print("\n\nOutputting data for Tableau...")
         # Concatinate and output the tables for Tableau
         tableau_chunked_df = pd.concat(tableau_chunked_data_dfs)
         tableau_sessions_df = pd.concat(tableau_sessions_overview_dfs)
@@ -368,15 +370,12 @@ class ChunkedDataHandler:
         chunked_data = []
         session_summary_data = []
 
-        spinner = Spinner("     ⏳")
+        print("Working...")
 
         for index, video in sessions_overview_df.iterrows():
 
             video_duration = video["Duration"]
             session_id = video["SessionId"]
-
-            # advance the progress spinner
-            spinner.next()
 
             session, unique_viewer_count, completed_count = self.__get_viewers_count(
                 session_id, sessions_overview_df, viewing_activity_df

@@ -4,12 +4,15 @@ from panopto_rest_api.panopto_interface import Panopto
 from datetime import datetime, timedelta
 from pathlib import Path
 
-# from progress.spinner import Spinner
 from termcolor import cprint
 import pandas as pd
 import settings
+import colorama
 import time
 import os
+
+# You need this for termcolor to display properly in windows terminal'
+colorama.init()
 
 
 class RawDataHandler:
@@ -76,11 +79,11 @@ class RawDataHandler:
                 # if the data has been updated in the last 24 utc hours, it doesn't need to be fetched again
                 if last_fetched >= datetime.utcnow() - timedelta(days=1):
                     print(
-                        "\n⚠️  "
+                        "\n"
                         + folder_name
                         + " data is already up-to-date => up to "
                         + str(last_fetched)
-                        + " UTC ⚠️"
+                        + " UTC"
                     )
                     continue
 
@@ -124,7 +127,7 @@ class RawDataHandler:
             viewing_data_df = pd.concat(viewing_data_dfs)
 
             database_path = Path(f"{settings.ROOT}/database")
-            target = database_path / f"/{folder_name}[{fid}]"
+            target = database_path / f"{folder_name}[{fid}]"
 
             if not os.path.isdir(target):
                 os.mkdir(target)
@@ -221,10 +224,10 @@ class RawDataHandler:
         folder_viewing_data = []
         for session in sessions:
             session_name = session["Name"]
-            print("\n 🔁 Fetching viewing data for video...")
-            cprint(" 🎬 " + session_name, "green")
-            cprint(f" 🕙 From: {begin_range}", "yellow")
-            cprint(f' 🕙 To: {end_range.strftime("%Y-%m-%d %H:%M:%S")}', "yellow")
+            print("\nFetching viewing data for video...")
+            cprint(session_name, "green")
+            cprint(f"From: {begin_range}", "yellow")
+            cprint(f'To: {end_range.strftime("%Y-%m-%d %H:%M:%S")}', "yellow")
             session_viewing_data = self.__get_session_viewing_data(
                 session["Id"], begin_range, end_range
             )
@@ -244,6 +247,8 @@ class RawDataHandler:
 
         records = []
         records_remaining = None
+
+        print('Working...')
 
         while True:
             if records_remaining is not None and records_remaining <= 0:
@@ -270,8 +275,6 @@ class RawDataHandler:
                 )
 
             page_num += 1
-
-            # spinner.next()
 
         print("")
         records = list(map(self.__add_fields, records))
