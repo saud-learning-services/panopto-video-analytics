@@ -124,7 +124,7 @@ class RawDataHandler:
             viewing_data_df = pd.concat(viewing_data_dfs)
 
             database_path = Path(f"{settings.ROOT}/database")
-            target = database_path / f"/{folder_name}[{fid}]"
+            target = database_path / f"{folder_name}[{fid}]"
 
             if not os.path.isdir(target):
                 os.mkdir(target)
