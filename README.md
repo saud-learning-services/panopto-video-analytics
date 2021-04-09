@@ -100,3 +100,15 @@ Perform the following join with the data output by `output_chunked_data.py`:
 <div align="center">
     <img src="_imgs/tableau-join.png" alt="join" width="600">
 </div>
+
+## Contributions
+
+**REST interface modified version of modules in:**
+[upload-python-sample](https://github.com/Panopto/upload-python-sample)
+Contributors (GitHub): Hiroshi Ohno, Zac Rumford
+Apache-2.0 License
+
+**SOAP interface modified version of:**
+[python-soap](https://github.com/Panopto/python-soap)
+Contributors (GitHub): Typer Libey, Gregory Scott Bell, Mark Brewster
+Apache-2.0 License
