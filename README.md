@@ -1,4 +1,6 @@
 # Panopto Video Analytics
+> WIP
+> Questions? Reach out to marko.prodanovic@sauder.ubc.ca or alison.myers@sauder.ubc.ca
 
 An interface for getting viewing data from Panopto sessions.
 
