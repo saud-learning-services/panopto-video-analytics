@@ -1,6 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 from termcolor import cprint
+from utils import sanitize_string
 from pytz import timezone
 import pandas as pd
 import colorama
@@ -336,7 +337,7 @@ class ChunkedDataHandler:
             tableau_chunked_data_dfs.append(chunked_data_df)
             tableau_sessions_overview_dfs.append(sessions_overview_df)
 
-            target = Path(f"output[CHUNKED]/{folder_name}[{folder_id}]")
+            target = Path(f"output[CHUNKED]/{sanitize_string(folder_name)}[{folder_id}]")
             if not os.path.isdir(target):
                 os.mkdir(target)
 

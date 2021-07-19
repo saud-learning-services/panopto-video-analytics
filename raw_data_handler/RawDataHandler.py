@@ -3,6 +3,7 @@ from panopto_rest_api.panopto_oauth2 import PanoptoOAuth2
 from panopto_rest_api.panopto_interface import Panopto
 from datetime import datetime, timedelta
 from pathlib import Path
+from utils import sanitize_string
 
 from termcolor import cprint
 import pandas as pd
@@ -127,7 +128,7 @@ class RawDataHandler:
             viewing_data_df = pd.concat(viewing_data_dfs)
 
             database_path = Path(f"{settings.ROOT}/database")
-            target = database_path / f"{folder_name}[{fid}]"
+            target = database_path / f"{sanitize_string(folder_name)}[{fid}]"
 
             if not os.path.isdir(target):
                 os.mkdir(target)
