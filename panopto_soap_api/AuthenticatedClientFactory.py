@@ -7,6 +7,11 @@ class AuthenticatedClientFactory(object):
     """
     A class encapsulating the Panopto authentication protocol, using username/password specified at construction.
     Use the class to get clients for supported endpoints and authenticate them with the stored credentials.
+    
+    SOAP interface modified version of:
+    python-soap (https://github.com/Panopto/python-soap)
+    Contributors (GitHub): Typer Libey, Gregory Scott Bell, Mark Brewster
+    Apache-2.0 License
     """
 
     def __init__(self, host, username, password, verify_ssl=True):
