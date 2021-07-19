@@ -44,11 +44,6 @@ class RawDataHandler:
         Sets the UsageReporting Client from SOAP as well
         """
 
-        cprint(settings.SERVER, 'red')
-        cprint(settings.USERNAME, 'red')
-        cprint(settings.PASSWORD, 'red')
-
-
         # SOAP API
         self.soap_interface = AuthenticatedClientFactory(
             settings.SERVER, settings.USERNAME, settings.PASSWORD, verify_ssl=True
