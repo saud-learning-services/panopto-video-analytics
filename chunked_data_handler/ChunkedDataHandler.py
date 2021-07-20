@@ -296,7 +296,7 @@ class ChunkedDataHandler:
         tableau_sessions_overview_dfs = []
 
         # Check to see if a Tableau folder already exists and if not make one
-        tableau_target = Path("output[CHUNKED]/tableau")
+        tableau_target = Path(f"{settings.ROOT}/output[CHUNKED]/tableau")
         if not os.path.isdir(tableau_target):
             os.mkdir(tableau_target)
 
