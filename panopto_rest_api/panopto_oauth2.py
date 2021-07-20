@@ -6,6 +6,7 @@ import time
 import pickle
 import pprint
 import webbrowser
+import settings
 from http.server import BaseHTTPRequestHandler
 from socketserver import ThreadingTCPServer
 from requests_oauthlib import OAuth2Session
@@ -31,7 +32,7 @@ class PanoptoOAuth2():
             server)
 
         # Create cache file name to store the refresh token. Use server & client ID combination.
-        self.cache_file = 'token_{0}_{1}.cache'.format(server, client_id)
+        self.cache_file = '{0}token_{1}_{2}.cache'.format(settings.ROOT, server, client_id)
 
         # Make oauthlib library accept non-HTTPS redirection.
         # This should not be applied if the redirect is hosted by actual server (not localhost).
