@@ -304,7 +304,7 @@ class ChunkedDataHandler:
             folder_id = f["folder_id"]
             folder_name = f["folder_name"]
 
-            folder_ids_to_run = pd.read_csv("courses.csv")["PanoptoFolderID"].to_list()
+            folder_ids_to_run = pd.read_csv("{settings.ROOT}/courses.csv")["PanoptoFolderID"].to_list()
 
             if folder_id not in folder_ids_to_run:
                 cprint(
@@ -337,7 +337,7 @@ class ChunkedDataHandler:
             tableau_chunked_data_dfs.append(chunked_data_df)
             tableau_sessions_overview_dfs.append(sessions_overview_df)
 
-            target = Path(f"output[CHUNKED]/{sanitize_string(folder_name)}[{folder_id}]")
+            target = Path(f"{settings.ROOT}output[CHUNKED]/{sanitize_string(folder_name)}[{folder_id}]")
             if not os.path.isdir(target):
                 os.mkdir(target)
 
