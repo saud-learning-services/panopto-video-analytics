@@ -304,7 +304,7 @@ class ChunkedDataHandler:
             folder_id = f["folder_id"]
             folder_name = f["folder_name"]
 
-            folder_ids_to_run = pd.read_csv("{settings.ROOT}/courses.csv")["PanoptoFolderID"].to_list()
+            folder_ids_to_run = pd.read_csv(f"{settings.ROOT}/courses.csv")["PanoptoFolderID"].to_list()
 
             if folder_id not in folder_ids_to_run:
                 cprint(
