@@ -337,7 +337,7 @@ class ChunkedDataHandler:
             tableau_chunked_data_dfs.append(chunked_data_df)
             tableau_sessions_overview_dfs.append(sessions_overview_df)
 
-            target = Path(f"{settings.ROOT}output[CHUNKED]/{sanitize_string(folder_name)}[{folder_id}]")
+            target = Path(f"{settings.ROOT}/output[CHUNKED]/{sanitize_string(folder_name)}[{folder_id}]")
             if not os.path.isdir(target):
                 os.mkdir(target)
 
