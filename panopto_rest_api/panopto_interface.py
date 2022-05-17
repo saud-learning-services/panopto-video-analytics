@@ -1,11 +1,7 @@
 import os
 import logging
-import json
-import copy
 import time
-import settings
 import requests
-import pprint as pp
 
 
 class Panopto:

@@ -464,7 +464,7 @@ class ChunkedDataHandler:
 
                             overlap_duration = overlap[1] - overlap[0]
 
-                            if overlap_duration <= 0:
+                            if overlap_duration < 0:
                                 msg = (
                                     "Expected range and chunk had at least some overlap"
                                 )
